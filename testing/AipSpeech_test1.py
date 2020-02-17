@@ -14,7 +14,7 @@ def get_file_content(filePath):
         return fp.read()
 
 # 獲取audio中的test.pcm,
-response = client.asr(get_file_content('./audio/test.wav'), 'wav', 16000, {
+response = client.asr(get_file_content('audio/test5.pcm'), 'pcm', 16000, {
     'dev_pid': 1536,
 })
 
