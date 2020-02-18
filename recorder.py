@@ -6,7 +6,7 @@ from misc import *
 from const import *
 
 min_amplitude = 0
-is_talking,tic,toc,start_discern = False,False,False,True
+is_talking,tic,toc = False,False,False
 tic_stop = 0
 
 #如果秒数等于0，则获取最短语音数据
@@ -92,15 +92,14 @@ def getAmplitude(frames):
 
 # 判断是否停止说话，并且在语音内添加前后空余时间
 def checktalk(_is_talking):
-    global is_talking,tic,tic_start,tic_stop,toc,start_discern
+    global is_talking,tic,tic_start,tic_stop,toc
     if tic:
         if not _is_talking and is_talking:
             if toc and round(time.time(),2) - tic_stop> MAX_INTERVAL_TIME:
-                print("is Talking " + str(round(time.time(), 2) - tic_start) + "s")
+                print("has Talked " + str(round(time.time(), 2) - tic_start) + "s")
                 if (tic_stop == 0): print("error")
                 tic,toc = False,False
                 tic_start,tic_stop = 0,0
-                start_discern = False
                 #is_talking = False
                 return False
             else:
@@ -121,30 +120,32 @@ def checktalk(_is_talking):
         return False
 
 def get_talkOnce():
-    global samp,last_samp,frames,is_talking
-    samp = b''
-    last_samp = b''
+    global is_talking
+    samp = []
     frames = []
     is_talking = False
+    _is_talking = False
+    i = 0
     stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
     print("Detecting...")
     while True:
-        samp = get_recordFrames(SAMP_TIME)
-        _is_talking = getAmplitude(samp) > min_amplitude
+        data = stream.read(CHUNK)
+        samp.append(data)
+        #samp = get_recordFrames(SAMP_TIME)
+        if i == MIN_BUFFER:
+            _is_talking = getAmplitude(b''.join(samp[len(samp)-1-MIN_BUFFER:])) > min_amplitude
+            i = 0
         is_talking = checktalk(_is_talking)
         if(is_talking):break
-        last_samp = samp
+        i = i + 1
     print("Start Talking")
     for i in range(0, int(RATE / CHUNK * TIMEOUT_USER)):
         frames.append(stream.read(CHUNK))
         amplitude = getAmplitude(b''.join(frames[i-int(LEISURE_TIME*RATE/CHUNK):]))
         _is_talking = amplitude > min_amplitude
         if (not checktalk(_is_talking) and amplitude != 0):
-            frames.insert(0,samp)
-            frames.insert(0, last_samp)
-            return b''.join(frames)
-    frames.insert(0, samp)
-    return b''.join(frames)
+            return b''.join(samp+frames)
+    return b''.join(samp+frames)
 
 def quit():
     p.terminate()

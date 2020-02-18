@@ -7,10 +7,9 @@ CHUNK = 2000#1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1#2
 RATE = 16000
-TIMEOUT_STREAM = 30
 
 #最短需要5个buffer才有能成为二进制语音
-MIN_BUFFER = 5
+MIN_BUFFER = 4
 #单线程下的参数
 #采样时间
 SAMP_TIME = 0.5
