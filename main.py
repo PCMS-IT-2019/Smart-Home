@@ -7,15 +7,16 @@ def main():
     if(not iscalibrated()):input("請確保周圍安靜並且你在按下Enter後5秒內說出“百度語音”")
     min_amplitude = calibrate(sensitivity)
     print("閾值為："+str(min_amplitude))
-    pcm = get_talkOnce()
-    save_recordFrames("test.pcm",pcm)
-    '''在此处添加语音识别'''
-    # create接口
-    client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
-    response = client.asr(pcm, 'pcm', 16000, {
-        'dev_pid': 1536,
-    })
-    print(response)
+    while True:
+        #pcm = get_talkOnce()
+        #save_recordFrames("test.pcm",pcm)
+        '''在此处添加语音识别'''
+        # create接口
+        client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
+        response = client.asr(get_talkOnce(), 'pcm', 16000, {
+            'dev_pid': DEV_PID.CN_ONLY,
+        })
+        print(response)
 
 if __name__ == '__main__':
     sys.exit(main())
