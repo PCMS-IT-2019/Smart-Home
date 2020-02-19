@@ -21,7 +21,7 @@ WAVE_OUTPUT_FILENAME = "calibration.pcm"
 RECORD_SECONDS = 5
 
 # 调试
-DEBUG = True
+DEBUG = False
 
 
 

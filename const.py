@@ -1,6 +1,7 @@
 # 参数文件，用户可自行调整
-from enum import Enum
+from enum import Enum,unique
 
+@unique
 class DEV_PID(Enum):
     CN_MIX = 1536
     CN_ONLY = 1537

@@ -14,7 +14,7 @@ def main():
         # create接口
         client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
         response = client.asr(get_talkOnce(), 'pcm', 16000, {
-            'dev_pid': DEV_PID.CN_ONLY,
+            'dev_pid': DEV_PID.CN_ONLY.value,
         })
         print(response)
 
