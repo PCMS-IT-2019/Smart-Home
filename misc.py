@@ -20,6 +20,9 @@ WAVE_OUTPUT_FILENAME = "calibration.pcm"
 # 标定录音时间
 RECORD_SECONDS = 5
 
+# 调试
+DEBUG = True
+
 
 
 

@@ -87,7 +87,7 @@ def getAmplitude(frames):
         return 0
     else:
         amplitude = np.max(np.abs(np.fromstring(frames, dtype=np.short)))
-        print(amplitude)
+        if DEBUG:print(amplitude)
         return amplitude
 
 # 判断是否停止说话，并且在语音内添加前后空余时间
