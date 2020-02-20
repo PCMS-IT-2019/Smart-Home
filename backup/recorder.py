@@ -129,6 +129,7 @@ def get_talkOnce():
     stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
     print("Detecting...")
     while True:
+        # 这里要添加TIMEOUT
         data = stream.read(CHUNK)
         samp.append(data)
         #samp = get_recordFrames(SAMP_TIME)
