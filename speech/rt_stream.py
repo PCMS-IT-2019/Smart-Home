@@ -67,7 +67,9 @@ def get_talkOnce():
         amplitude = getAmplitude(b''.join(frames[i-int(LEISURE_TIME*RATE/CHUNK):]))
         _is_talking = amplitude > min_amplitude
         if (not checktalk(_is_talking) and amplitude != 0):
+            p.terminate()
             return b''.join(samp+frames)
+    p.terminate()
     return b''.join(samp+frames)
 
 def input_loop(input_str):
