@@ -10,7 +10,7 @@ SAMP_TIME = 0.5
 
 # 标定
 # 要写入的文件名
-WAVE_OUTPUT_FILENAME = "calibration.pcm"
+WAVE_OUTPUT_FILENAME = "speech/audio/calibration.pcm"
 # 标定录音时间
 RECORD_SECONDS = 5
 
