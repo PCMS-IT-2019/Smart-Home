@@ -1,9 +1,9 @@
 import time
 from speech.sound_cal import *
-
+from speech import sound_cal
 # 识别语音的参数
 # 说话最大间断秒数
-MAX_INTERVAL_TIME = 0.5
+MAX_INTERVAL_TIME = 0.2
 #百度API超时时间60秒
 TIMEOUT_API = 58
 #语音前后留多少空闲时间
@@ -11,18 +11,21 @@ LEISURE_TIME = 0.5
 # 说话多久超时
 TIMEOUT_USER = TIMEOUT_API
 
+is_talking,tic,tic_start,tic_stop,toc = False,False,0,0,False
+
 # 判断是否停止说话，并且在语音内添加前后空余时间
 def checktalk(_is_talking):
     global is_talking,tic,tic_start,tic_stop,toc
     if tic:
         if not _is_talking and is_talking:
-            if toc and round(time.time(),2) - tic_stop> MAX_INTERVAL_TIME:
-                print("has Talked " + str(round(time.time(), 2) - tic_start) + "s")
-                if (tic_stop == 0): print("error")
+            if toc and (time.time() - tic_stop)> MAX_INTERVAL_TIME:
                 tic,toc = False,False
                 tic_start,tic_stop = 0,0
                 #is_talking = False
                 return False
+            elif toc:
+                #waiting for interval time
+                pass
             else:
                 tic_stop = round(time.time(),2)
                 toc = True
@@ -40,37 +43,34 @@ def checktalk(_is_talking):
         #is_talking = False
         return False
 
-def get_talkOnce():
+def get_talkOnce(TIMEOUT_DETECT):
     p = pyaudio.PyAudio()
     global is_talking
-    samp = []
     frames = []
-    is_talking = False
     _is_talking = False
     i = 0
     stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
     print("Detecting...")
     while True:
-        # 这里要添加TIMEOUT
         data = stream.read(CHUNK)
-        samp.append(data)
+        frames.append(data)
         #samp = get_recordFrames(SAMP_TIME)
-        if i == MIN_BUFFER:
-            _is_talking = getAmplitude(b''.join(samp[len(samp)-1-MIN_BUFFER:])) > min_amplitude
-            i = 0
+        if(len(frames)%MIN_BUFFER==0): _is_talking = getAmplitude(b''.join(frames[len(frames)-MIN_BUFFER*CHUNK:])) > sound_cal.min_amplitude
         is_talking = checktalk(_is_talking)
         if(is_talking):break
-        i = i + 1
+        i += 1
     print("Start Talking")
-    for i in range(0, int(RATE / CHUNK * TIMEOUT_USER)):
+    a = time.time()
+    for j in range(0, int(RATE / CHUNK * TIMEOUT_USER)):
         frames.append(stream.read(CHUNK))
-        amplitude = getAmplitude(b''.join(frames[i-int(LEISURE_TIME*RATE/CHUNK):]))
-        _is_talking = amplitude > min_amplitude
-        if (not checktalk(_is_talking) and amplitude != 0):
+        if (len(frames) % MIN_BUFFER == 0):
+            _is_talking = getAmplitude(b''.join(frames[len(frames) - MIN_BUFFER:])) > sound_cal.min_amplitude
+        if not checktalk(_is_talking):
             p.terminate()
-            return b''.join(samp+frames)
+            print("has Talked",round(time.time()-a,2))
+            return b''.join(frames[i-int(LEISURE_TIME*RATE/CHUNK):])
     p.terminate()
-    return b''.join(samp+frames)
+    return b''.join(frames[i-int(LEISURE_TIME*RATE/CHUNK):])
 
 def input_loop(input_str):
     def isscalar(str):

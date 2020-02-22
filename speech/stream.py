@@ -8,9 +8,6 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1#2
 RATE = 16000
 
-# 调试
-DEBUG = False
-
 def get_recordFrames(seconds):
     p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input=True,frames_per_buffer=CHUNK)
@@ -27,6 +24,7 @@ def get_recordFrames(seconds):
 
 # 保存语音为.pcm
 def save_recordFrames(filename,frames):
+    p = pyaudio.PyAudio()
     wf = wave.open(filename, 'wb')
     wf.setnchannels(CHANNELS)
     wf.setsampwidth(p.get_sample_size(FORMAT))

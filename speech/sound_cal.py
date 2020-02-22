@@ -2,7 +2,7 @@ import os
 import numpy as np  # 调用numpy模块记作np
 from speech.stream import *
 
-#最短需要5个buffer才有能成为二进制语音
+#最短需要4个buffer才有能成为二进制语音
 MIN_BUFFER = 4
 #单线程下的参数
 #采样时间
@@ -14,12 +14,14 @@ WAVE_OUTPUT_FILENAME = "speech/audio/calibration.pcm"
 # 标定录音时间
 RECORD_SECONDS = 5
 
-min_amplitude = 0
+# 调试
+DEBUG = False
+
+min_amplitude,tic_stop = 0,0
 is_talking,tic,toc = False,False,False
-tic_stop = 0
 
 # 是否标定
-def iscalibrated():
+def is_calibrated():
     return os.path.exists(WAVE_OUTPUT_FILENAME)
 
 # 校正时的录音长度
