@@ -51,7 +51,9 @@ def get_talkOnce(TIMEOUT_DETECT):
     i = 0
     stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
     print("Detecting...")
+    start = time.time()
     while True:
+        if(time.time()-start>TIMEOUT_DETECT and TIMEOUT_DETECT!=0):return b''
         data = stream.read(CHUNK)
         frames.append(data)
         #samp = get_recordFrames(SAMP_TIME)
