@@ -25,3 +25,12 @@ def parser(text):
     client = AipNlp(APP_ID, API_KEY, SECRET_KEY)
     response = client.depParser(text)
     return(response)
+
+def synthesis(text):
+    client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
+    result = client.synthesis('你好百度', 'zh', 1, {
+        'vol': 5,
+    })
+    # 识别正确返回语音二进制 错误则返回dict
+    if not isinstance(result, dict):
+        return result
