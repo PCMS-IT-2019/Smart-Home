@@ -8,7 +8,7 @@ from playsound import playsound
 def main():
     # 一定要保存为.mp3格式
     filename = '../speech/audio/tts.mp3'
-    save_recordFrames(filename,synthesis('百度语音'))
+    save_recordFrames(filename,synthesis('百度语音'),FORMAT=pyaudio.paInt32)
     playsound(filename)
 
 if __name__ == '__main__':
