@@ -4,7 +4,7 @@ import wave
 # 录音参数
 # 定义数据流块
 CHUNK = 2000#1024
-FORMAT = pyaudio.paInt16
+FORMAT = pyaudio.paInt32
 CHANNELS = 1#2
 RATE = 16000
 
