@@ -3,8 +3,6 @@ from aip import AipSpeech
 import requests
 import json
 import base64
-import os
-from speech.stream import *
 
 from enum import Enum,unique
 @unique
@@ -42,7 +40,7 @@ def quick_asr(audio):
     data = {
         "format": "pcm",
         "cuid": "test1",
-        "rate": RATE,
+        "rate": 16000,
         "dev_pid": 80001,
         "speech": base64.b64encode(audio).decode('utf8'),
         "len": len(audio),
