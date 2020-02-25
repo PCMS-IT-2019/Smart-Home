@@ -36,7 +36,7 @@ def get_token():
     print(token)
     return token
 
-def quick_asr(audio,length):
+def quick_asr(audio):
     headers = {'Content-Type': 'application/json'}
     url = "https://vop.baidu.com/pro_api"
     data = {
@@ -45,13 +45,12 @@ def quick_asr(audio,length):
         "rate": RATE,
         "dev_pid": 80001,
         "speech": base64.b64encode(audio).decode('utf8'),
-        "len": length,
+        "len": len(audio),
         "channel": 1,
         "token": TOKEN,
     }
     req = requests.post(url, json.dumps(data), headers)
-    result = json.loads(req.text)
-    return result["result"][0]
+    return json.loads(req.text)
 
 def parser(text):
     client = AipNlp(APP_ID, API_KEY, SECRET_KEY)
