@@ -4,11 +4,11 @@ import wave
 # 录音参数
 # 定义数据流块
 CHUNK = 2000#1024
-FORMAT = pyaudio.paInt32
+FORMAT = pyaudio.paInt16
 CHANNELS = 1#2
 RATE = 16000
 
-def get_recordFrames(seconds):
+def get_recordFrames(seconds,FORMAT=FORMAT):
     p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input=True,frames_per_buffer=CHUNK)
     # 开始录音
@@ -23,7 +23,7 @@ def get_recordFrames(seconds):
     return b''.join(frames)
 
 # 保存语音为.pcm
-def save_recordFrames(filename,frames):
+def save_recordFrames(filename,frames,FORMAT=FORMAT):
     p = pyaudio.PyAudio()
     wf = wave.open(filename, 'wb')
     wf.setnchannels(CHANNELS)
