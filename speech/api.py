@@ -58,13 +58,14 @@ def parser(text):
 def synthesis(text):
     client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
     result = client.synthesis(text, 'zh', 1, {
-        'vol': 5,
+        'vol': 5, 'spd': 5, 'per': 4
     })
     '''
     spd	语速，取值0-9，默认为5中语速
     pit	音调，取值0-9，默认为5中语调
     vol	音量，取值0-15，默认为5中音量
     per	发音人选择, 0为女声，1为男声，3为情感合成-度逍遥，4为情感合成-度丫丫，默认为普通女	
+    精品语音合成：度博文=106，度小童=110，度小萌=111，度米朵=103，度小娇=5
     '''
     # 识别正确返回语音二进制 错误则返回dict
     if not isinstance(result, dict):
